@@ -1,0 +1,5 @@
+Para después convertirlo en una app tenemos que 
+1. pip install pyinstaller
+2. pyinstaller --noconsole --onefile main.py
+
+(--noconsole quita la ventanita negra de fondo y --onefile empaqueta todo en un solo icono).
