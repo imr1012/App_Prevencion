@@ -71,8 +71,10 @@ def procesar_genotipos(ruta_csv):
         return score, fenotipo
 
     filas_df = []
+    solucion = {}
     for paciente, genes in diplotiposPacientes.items():
         fila = {"Paciente": paciente}
+        solucion[paciente] = {}
         for gen, diplotipo in genes.items():
             if gen == "CYP2D6":
                 score, fenotipo = fenotipo_asignar(diplotipo)
@@ -89,6 +91,7 @@ def procesar_genotipos(ruta_csv):
                 else: fenotipo = "Normal Metabolizer"
                 fila[f"{gen}_Diplotipo"] = diplotipo
                 fila[f"{gen}_Fenotipo"] = fenotipo
+            solucion[paciente][gen] = {"Phenotype": fenotipo}
         filas_df.append(fila)
 
-    return pd.DataFrame(filas_df)
+    return pd.DataFrame(filas_df), solucion
