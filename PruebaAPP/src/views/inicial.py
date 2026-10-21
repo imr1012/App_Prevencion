@@ -63,7 +63,7 @@ class Ventana_inicial:
         header_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
         header_frame.pack(fill=tk.X, pady=(10, 20), padx=10)
 
-        titulo = ctk.CTkLabel(header_frame, text="💊 DrogApp: Reportes de Farmacogenética",
+        titulo = ctk.CTkLabel(header_frame, text="💊 DrugApp: Reportes de Farmacogenética",
                       text_color=self.COLOR_PRIMARY,
                       font=ctk.CTkFont(family="Helvetica", size=20, weight="bold"))
         titulo.pack(side=tk.LEFT)
