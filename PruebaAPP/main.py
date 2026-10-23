@@ -7,7 +7,7 @@ def main():
     ctk.set_default_color_theme("blue")  # Opciones: "blue", "green", "dark-blue"
 
     ventana = ctk.CTk()
-    ventana.title("DrogApp - Sistema de Análisis Farmacogenético")
+    ventana.title("DrugApp - Sistema de Análisis Farmacogenético")
     ventana.geometry("950x650")
     ventana.minsize(800, 500)
     
