@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, ttk, messagebox
 import customtkinter as ctk
 from src.logic.processor import procesar_genotipos
-from src.logic.pdf_generator import generar_pdf_paciente
+from src.logic.pdf_generator import generar_pdf_paciente, generar_pdf_manual
 from src.logic.generar_recomendaciones import generar_recomendaciones
 
 
@@ -47,10 +47,9 @@ class Ventana_inicial:
                         relief="flat",
                         padding=6,
                         font=('Helvetica', 10, 'bold'))
-        style.map("Treeview.Heading", 
-                  background=[('active', self.COLOR_HOVER)])
+        style.map("Treeview.Heading", background=[('active', self.COLOR_HOVER)])
         # --- CONTENEDOR PRINCIPAL ---
-        main_frame = ctk.CTkFrame(
+        main_frame = ctk.CTkScrollableFrame(
             self.master, 
             corner_radius=18, 
             fg_color=self.COLOR_CARD,
@@ -61,11 +60,12 @@ class Ventana_inicial:
 
         # --- SECCIÓN SUPERIOR ---
         header_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
-        header_frame.pack(fill=tk.X, pady=(10, 20), padx=10)
+        header_frame.pack(fill=tk.X, pady=(10, 10), padx=10)
 
         titulo = ctk.CTkLabel(header_frame, text="💊 DrugApp: Reportes de Farmacogenética",
                       text_color=self.COLOR_PRIMARY,
                       font=ctk.CTkFont(family="Helvetica", size=20, weight="bold"))
+        
         titulo.pack(side=tk.LEFT)
 
         self.btn_cargar = ctk.CTkButton(header_frame, text="📂 Cargar CSV", command=self.cargar_csv,
@@ -91,12 +91,12 @@ class Ventana_inicial:
         scrollbar_y = ttk.Scrollbar(table_frame, orient=tk.VERTICAL, command=self.tree.yview)
         scrollbar_x = ttk.Scrollbar(main_frame, orient=tk.HORIZONTAL, command=self.tree.xview)
 
-        style.configure("Vertical.TScrollbar", background=self.COLOR_ACCENT,
-                troughcolor=self.COLOR_BG, bordercolor=self.COLOR_BG,
-                arrowcolor="white")
-        style.configure("Horizontal.TScrollbar", background=self.COLOR_ACCENT,
-                        troughcolor=self.COLOR_BG, bordercolor=self.COLOR_BG,
-                        arrowcolor="white")
+        #style.configure("Vertical.TScrollbar", background=self.COLOR_ACCENT,
+                #troughcolor=self.COLOR_BG, bordercolor=self.COLOR_BG,
+                #arrowcolor="white")
+        #style.configure("Horizontal.TScrollbar", background=self.COLOR_ACCENT,
+                        #troughcolor=self.COLOR_BG, bordercolor=self.COLOR_BG,
+                        #arrowcolor="white")
         self.tree.configure(yscroll=scrollbar_y.set, xscroll=scrollbar_x.set)
         
         scrollbar_y.pack(side=tk.RIGHT, fill=tk.Y)
@@ -124,12 +124,76 @@ class Ventana_inicial:
                              text_color="white",
                              text_color_disabled="white",
                              font=ctk.CTkFont(weight="bold"))
-        self.btn_previ.pack(side=tk.RIGHT)
+        self.btn_previ.pack(side=tk.RIGHT, padx=10)
         
         instrucciones = ctk.CTkLabel(footer_frame,
                              text="* Selecciona un paciente de la tabla para exportar su informe.",
                              text_color=self.COLOR_TEXT)
         instrucciones.pack(side=tk.LEFT)
+
+        # Línea divisoria
+        separador = ctk.CTkFrame(main_frame, height=2, fg_color="#F8B4C9")
+        separador.pack(fill=tk.X, padx=20, pady=25)
+
+        #Ingreso manual del usuario de los datos
+        lbl_manual = ctk.CTkLabel(main_frame, text="📝 Ingreso Manual de Paciente Individual",
+                                  text_color=self.COLOR_PRIMARY,
+                                  font=ctk.CTkFont(family="Helvetica", size=18, weight="bold"))
+        lbl_manual.pack(anchor="w", padx=20, pady=(0, 15))
+
+        datos_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
+        datos_frame.pack(fill=tk.X, padx=20)
+
+        # Fila 1: Nombre, Apellido, DNI
+        self.ent_nombre = ctk.CTkEntry(datos_frame, placeholder_text="Nombre", width=200, border_color="#F8B4C9")
+        self.ent_nombre.grid(row=0, column=0, padx=(0, 15), pady=10)
+        self.ent_apellido = ctk.CTkEntry(datos_frame, placeholder_text="Apellidos", width=200, border_color="#F8B4C9")
+        self.ent_apellido.grid(row=0, column=1, padx=15, pady=10)
+        self.ent_dni = ctk.CTkEntry(datos_frame, placeholder_text="DNI (Opcional)", width=150, border_color="#F8B4C9")
+        self.ent_dni.grid(row=0, column=2, padx=15, pady=10)
+
+        # Fila 2: Sexo, Fecha de Nacimiento
+        self.cbx_sexo = ctk.CTkComboBox(datos_frame, values=["Seleccionar Sexo", "Masculino", "Femenino", "Otro"], width=200, border_color="#F8B4C9", button_color=self.COLOR_PRIMARY)
+        self.cbx_sexo.grid(row=1, column=0, padx=(0, 15), pady=10)
+        self.ent_fecha = ctk.CTkEntry(datos_frame, placeholder_text="Fecha Nacimiento (DD/MM/AAAA)", width=200, border_color="#F8B4C9")
+        self.ent_fecha.grid(row=1, column=1, padx=15, pady=10)
+
+        # Fila 3: Patologías
+        ctk.CTkLabel(datos_frame, text="Patologías / Tratamientos actuales (Opcional):", text_color=self.COLOR_TEXT, font=ctk.CTkFont(weight="bold")).grid(row=2, column=0, columnspan=3, sticky="w", pady=(15, 5))
+        self.txt_notas = ctk.CTkTextbox(datos_frame, height=60, width=580, border_color="#F8B4C9", border_width=2, fg_color=self.COLOR_FILA_PAR)
+        self.txt_notas.grid(row=3, column=0, columnspan=3, sticky="w", pady=(0, 15))
+
+        # Fila 4: Cuadro Genético
+        ctk.CTkLabel(datos_frame, text="Cuadro Genético Conocido:", text_color=self.COLOR_PRIMARY, font=ctk.CTkFont(weight="bold")).grid(row=4, column=0, columnspan=3, sticky="w", pady=(10, 5))
+        
+        gen_frame = ctk.CTkFrame(datos_frame, fg_color="transparent")
+        gen_frame.grid(row=5, column=0, columnspan=3, sticky="w")
+
+        self.ent_gen = ctk.CTkEntry(gen_frame, placeholder_text="Gen (ej. CYP2D6)", width=130, border_color="#F8B4C9")
+        self.ent_gen.pack(side=tk.LEFT, padx=(0, 10))
+        self.ent_alelo1 = ctk.CTkEntry(gen_frame, placeholder_text="Alelo 1 (ej. *1)", width=90, border_color="#F8B4C9")
+        self.ent_alelo1.pack(side=tk.LEFT, padx=10)
+        self.ent_alelo2 = ctk.CTkEntry(gen_frame, placeholder_text="Alelo 2 (ej. *4)", width=90, border_color="#F8B4C9")
+        self.ent_alelo2.pack(side=tk.LEFT, padx=10)
+
+        btn_add_gen = ctk.CTkButton(gen_frame, text="➕ Añadir Gen", command=self.add_gen_manual, 
+                                    fg_color=self.COLOR_PRIMARY, hover_color=self.COLOR_HOVER, font=ctk.CTkFont(weight="bold"))
+        btn_add_gen.pack(side=tk.LEFT, padx=15)
+
+        # Tabla Manual de Genes
+        self.tree_manual = ttk.Treeview(datos_frame, columns=("Gen", "Alelo 1", "Alelo 2", "Diplotipo"), show='headings', height=4)
+        for col in ("Gen", "Alelo 1", "Alelo 2", "Diplotipo"):
+            self.tree_manual.heading(col, text=col)
+            self.tree_manual.column(col, width=130, anchor=tk.CENTER)
+        self.tree_manual.grid(row=6, column=0, columnspan=3, sticky="we", pady=15)
+
+        # Botón final Manual
+        btn_pdf_manual = ctk.CTkButton(main_frame, text="📄 Generar PDF del Paciente Manual", command=self.exportar_pdf_manual, 
+                                       fg_color=self.COLOR_PRIMARY, hover_color=self.COLOR_HOVER, font=ctk.CTkFont(weight="bold"))
+        btn_pdf_manual.pack(side=tk.RIGHT, padx=20, pady=(0, 20))
+
+
+
 
     # --- LÓGICA DE LA INTERFAZ ---
     def cargar_csv(self):
@@ -173,6 +237,7 @@ class Ventana_inicial:
             
         self.tree.tag_configure("impar", background=self.COLOR_FILA_IMPAR, foreground=self.COLOR_TEXT)
         self.tree.tag_configure("par", background=self.COLOR_FILA_PAR, foreground=self.COLOR_TEXT)
+    
     def exportar_pdf(self):
         seleccion = self.tree.selection()
         if not seleccion:
@@ -196,6 +261,7 @@ class Ventana_inicial:
                 messagebox.showinfo("Éxito", f"¡PDF generado correctamente!\n\nSe ha guardado en:\n{ruta_guardado}")
             except Exception as e:
                 messagebox.showerror("Error", f"No se pudo crear el PDF:\n{e}")
+    
     def previsualizacion(self):
         seleccion = self.tree.selection()
         if not seleccion:
@@ -244,3 +310,50 @@ class Ventana_inicial:
         tree.tag_configure("impar", background=self.COLOR_FILA_IMPAR)
         tree.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
             
+    def add_gen_manual(self):
+        gen = self.ent_gen.get().strip().upper()
+        a1 = self.ent_alelo1.get().strip()
+        a2 = self.ent_alelo2.get().strip()
+        if gen and a1 and a2:
+            diplotipo = f"{a1}/{a2}"
+            
+            # Etiquetado para intercalar colores
+            num_items = len(self.tree_manual.get_children())
+            tag = "par" if num_items % 2 == 0 else "impar"
+            
+            self.tree_manual.insert("", "end", values=(gen, a1, a2, diplotipo), tags=(tag,))
+            self.tree_manual.tag_configure("impar", background=self.COLOR_FILA_IMPAR, foreground=self.COLOR_TEXT)
+            self.tree_manual.tag_configure("par", background=self.COLOR_FILA_PAR, foreground=self.COLOR_TEXT)
+            
+            self.ent_gen.delete(0, tk.END)
+            self.ent_alelo1.delete(0, tk.END)
+            self.ent_alelo2.delete(0, tk.END)
+        else:
+            messagebox.showwarning("Faltan datos", "Por favor rellena el Gen y ambos alelos.")
+
+    def exportar_pdf_manual(self):
+        nombre = self.ent_nombre.get().strip()
+        apellido = self.ent_apellido.get().strip()
+        
+        if not nombre or not apellido:
+            messagebox.showwarning("Faltan datos", "El Nombre y los Apellidos son obligatorios.")
+            return
+            
+        genes = []
+        for item in self.tree_manual.get_children():
+            valores = self.tree_manual.item(item, 'values')
+            genes.append({"Gen": valores[0], "Diplotipo": valores[3]})
+
+        datos = {
+            "Nombre": f"{nombre} {apellido}",
+            "DNI": self.ent_dni.get().strip() or "No especificado",
+            "Sexo": self.cbx_sexo.get() if self.cbx_sexo.get() != "Seleccionar Sexo" else "No especificado",
+            "Fecha Nacimiento": self.ent_fecha.get().strip() or "No especificada",
+            "Notas": self.txt_notas.get("1.0", tk.END).strip() or "Ninguna",
+            "Genes": genes
+        }
+
+        ruta = filedialog.asksaveasfilename(defaultextension=".pdf", initialfile=f"Informe_{nombre}_{apellido}.pdf")
+        if ruta:
+            generar_pdf_manual(datos, ruta)
+            messagebox.showinfo("Éxito", "PDF del paciente manual generado correctamente.")
