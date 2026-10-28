@@ -1,10 +1,10 @@
-Polimorfismo,Base ancestral,Mutaciones
-DPYD*2A,C,"['A', 'G', 'T']"
-DPYD*13,A,"['C', 'T']"
-DPYD_D949V,T,['A']
-DPYD_HapB3,C,"['A', 'G', 'T']"
-CYP2D6*3,T,['-']
-CYP2D6*4,C,"['A', 'G', 'T']"
-CYP2D6*17,G,"['A', 'C', 'T']"
-CYP2D6*41,C,"['A', 'G', 'T']"
-UGT1A1*80,C,"['A', 'G', 'T']"
+Gen,Polimorfismo,Identificador RS,Base ancestral,Mutaciones
+DPYD,DPYD*2A,rs3918290,C,"['A', 'G', 'T']"
+DPYD,DPYD*13,rs55886062,A,"['C', 'T']"
+DPYD,DPYD_D949V,rs67376798,T,['A']
+DPYD,DPYD_HapB3,rs56038477,C,"['A', 'G', 'T']"
+CYP2D6,CYP2D6*3,rs35742686,T,['-']
+CYP2D6,CYP2D6*4,rs3892097,C,"['A', 'G', 'T']"
+CYP2D6,CYP2D6*17,rs28371706,G,"['A', 'C', 'T']"
+CYP2D6,CYP2D6*41,rs28371725,C,"['A', 'G', 'T']"
+UGT1A10,UGT1A1*80,rs887829,C,"['A', 'G', 'T']"
