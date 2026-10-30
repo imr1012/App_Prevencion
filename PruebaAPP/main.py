@@ -3,7 +3,7 @@ from src.views.inicial import Ventana_inicial
 
 def main():
     # Configuración de CustomTkinter
-    ctk.set_appearance_mode("Dark")  # Opciones: "System", "Dark", "Light"
+    ctk.set_appearance_mode("Light")  # Opciones: "System", "Dark", "Light"
     ctk.set_default_color_theme("blue")  # Opciones: "blue", "green", "dark-blue"
 
     ventana = ctk.CTk()
