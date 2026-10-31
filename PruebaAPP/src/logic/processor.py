@@ -6,10 +6,9 @@ import os
 def procesar_genotipos(ruta_csv):
     # Cargar las bases de datos de referencia
     # Asume que los archivos están en la carpeta raíz del proyecto
-    if not os.path.isfile("tabla_mutaciones.csv"): #no existe aún una tabla de transformaciones
-        generador_tabla()
-    df_resumen = pd.read_csv('tabla_mutaciones.csv')
-    CPIC = pd.read_excel('CYP2D6_Diplotype_Phenotype_Table.xlsx')
+    
+    df_resumen = pd.read_csv('PruebaAPP/tabla_mutaciones.csv')
+    CPIC = pd.read_excel("PruebaAPP/CYP2D6_Diplotype_Phenotype_Table.xlsx")
     
     ancestral = dict(zip(df_resumen["Polimorfismo"], df_resumen["Base ancestral"]))
 

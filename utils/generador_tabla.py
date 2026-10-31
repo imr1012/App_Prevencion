@@ -41,14 +41,10 @@ for k, v in variants.items():
     variantes.append(gen_mut)
     
 
-
-
     
 df_resumen = pd.DataFrame({"Gen": genes, "Polimorfismo": variants.keys(), "Identificador RS": variants.values(), "Base ancestral": base_og, "Mutaciones": variantes})
 pd.display(df_resumen)
 
 df_resumen.to_csv("tabla_mutaciones", sep = ",", index = False)
-
-import csv
 
 lectura = pd.read_csv("tabla_mutaciones")

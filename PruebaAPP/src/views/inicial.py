@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, ttk, messagebox
 import customtkinter as ctk
 from src.logic.processor import procesar_genotipos
-from src.logic.pdf_generator import generar_pdf_paciente, generar_pdf_manual
+from src.logic.pdf_generator import generar_pdf_paciente, generar_pdf_manual, informe_pdf
 from src.logic.generar_recomendaciones import generar_recomendaciones
 
 
@@ -107,6 +107,7 @@ class Ventana_inicial:
         footer_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
         footer_frame.pack(fill=tk.X, pady=(20, 10), padx=10)
 
+        '''
         self.btn_pdf = ctk.CTkButton(footer_frame, text="📄 Generar PDF del Paciente", command=self.exportar_pdf,
                              state="disabled",
                              fg_color="#E8B9C8",
@@ -116,7 +117,7 @@ class Ventana_inicial:
                              font=ctk.CTkFont(weight="bold"))
         self.btn_pdf.pack(side=tk.RIGHT)
 
-
+        '''
         self.btn_previ = ctk.CTkButton(footer_frame, text="Previsualizar recomendaciones", command=self.previsualizacion,
                              state="disabled",
                              fg_color="#E8B9C8",
@@ -125,7 +126,8 @@ class Ventana_inicial:
                              text_color_disabled="white",
                              font=ctk.CTkFont(weight="bold"))
         self.btn_previ.pack(side=tk.RIGHT, padx=10)
-
+    
+        
         self.btn_paciente = ctk.CTkButton(footer_frame, text="Añadir datos de paciente", command=self.datos_paciente,
                              state="disabled",
                              fg_color="#E8B9C8",
@@ -157,12 +159,12 @@ class Ventana_inicial:
                 self.master.update()
                 
                 # Llamada a la lógica procesadora
-                self.df_resultados, solucion = procesar_genotipos(ruta_archivo)
+                self.df_resultados, solucion = procesar_genotipos(ruta_archivo)              
                 self.actualizar_tabla(self.df_resultados)
                 # Recomendaciones para la previsualización
                 self.df_recomendaciones = generar_recomendaciones(solucion)
                 # Rehabilitar botón con su color original
-                self.btn_pdf.configure(state="normal", fg_color=self.COLOR_PRIMARY)
+                #self.btn_pdf.configure(state="normal", fg_color=self.COLOR_PRIMARY)
                 self.btn_previ.configure(state="normal", fg_color=self.COLOR_PRIMARY)
                 self.btn_paciente.configure(state="normal", fg_color=self.COLOR_PRIMARY)
                 self.lbl_estado.configure(text="✅ Datos cargados", text_color="#27AE60")
@@ -191,7 +193,8 @@ class Ventana_inicial:
             
         self.tree.tag_configure("impar", background=self.COLOR_FILA_IMPAR, foreground=self.COLOR_TEXT)
         self.tree.tag_configure("par", background=self.COLOR_FILA_PAR, foreground=self.COLOR_TEXT)
-    
+
+    '''
     def exportar_pdf(self):
         seleccion = self.tree.selection()
         if not seleccion:
@@ -216,6 +219,8 @@ class Ventana_inicial:
             except Exception as e:
                 messagebox.showerror("Error", f"No se pudo crear el PDF:\n{e}")
 
+    '''
+
     def datos_paciente(self):
         seleccion = self.tree.selection()
         if not seleccion:
@@ -223,7 +228,6 @@ class Ventana_inicial:
             return
 
         valores = self.tree.item(seleccion[0], 'values')
-        columnas_main = self.tree["columns"]
         datos_paciente = dict(zip(self.tree["columns"], valores))
         id_paciente = str(datos_paciente.get("Paciente", ""))
 
@@ -264,9 +268,14 @@ class Ventana_inicial:
         self.ent_fecha.grid(row=1, column=1, padx=15, pady=10)
 
         # Fila 3: Patologías
-        ctk.CTkLabel(datos_frame, text="Patologías / Tratamientos actuales (Opcional):", text_color=self.COLOR_TEXT, font=ctk.CTkFont(weight="bold")).grid(row=2, column=0, columnspan=3, sticky="w", pady=(15, 5))
-        self.txt_notas = ctk.CTkTextbox(datos_frame, height=60, width=580, border_color="#F8B4C9", border_width=2, fg_color=self.COLOR_FILA_PAR)
-        self.txt_notas.grid(row=3, column=0, columnspan=3, sticky="w", pady=(0, 15))
+        ctk.CTkLabel(datos_frame, text="Patologías actuales (Opcional):", text_color=self.COLOR_TEXT, font=ctk.CTkFont(weight="bold")).grid(row=2, column=0, columnspan=3, sticky="w", pady=(15, 5))
+        self.txt_enferm = ctk.CTkTextbox(datos_frame, height=60, width=580, border_color="#F8B4C9", border_width=2, fg_color=self.COLOR_FILA_PAR)
+        self.txt_enferm.grid(row=3, column=0, columnspan=3, sticky="w", pady=(0, 15))
+
+        # Fila 4: Tratamientos
+        ctk.CTkLabel(datos_frame, text="Tratamiento habitual (Opcional):", text_color=self.COLOR_TEXT, font=ctk.CTkFont(weight="bold")).grid(row=4, column=0, columnspan=3, sticky="w", pady=(15, 5))
+        self.txt_tto = ctk.CTkTextbox(datos_frame, height=60, width=580, border_color="#F8B4C9", border_width=2, fg_color=self.COLOR_FILA_PAR)
+        self.txt_tto.grid(row=5, column=0, columnspan=3, sticky="w", pady=(0, 15))        
 
         '''
         # Fila 4: Cuadro Genético
@@ -295,7 +304,7 @@ class Ventana_inicial:
         '''
 
         # Botón final Manual
-        btn_pdf_manual = ctk.CTkButton(win, text="📄 Generar PDF del Paciente Manual", command=self.exportar_pdf_manual, 
+        btn_pdf_manual = ctk.CTkButton(win, text="📄 Generar PDF del Paciente", command=self.exportar_pdf_manual, 
                                        fg_color=self.COLOR_PRIMARY, hover_color=self.COLOR_HOVER, font=ctk.CTkFont(weight="bold"))
         btn_pdf_manual.pack(side=tk.RIGHT, padx=20, pady=(0, 20))
         
@@ -370,6 +379,23 @@ class Ventana_inicial:
             messagebox.showwarning("Faltan datos", "Por favor rellena el Gen y ambos alelos.")
 
     def exportar_pdf_manual(self):
+        seleccion = self.tree.selection()
+        if not seleccion:
+            messagebox.showwarning("Atención", "Por favor, haz clic sobre un paciente de la lista primero.")
+            return
+
+        valores = self.tree.item(seleccion[0], 'values')
+        datos_paciente = dict(zip(self.tree["columns"], valores))
+        id_paciente = str(datos_paciente.get("Paciente", ""))
+
+            
+        df_resultados = self.df_resultados
+        df_res = df_resultados[df_resultados["Paciente"] == id_paciente]
+
+
+        df = self.df_recomendaciones
+        df_paciente = df[df["Identificador paciente"] == id_paciente]
+
         nombre = self.ent_nombre.get().strip()
         apellido = self.ent_apellido.get().strip()
         
@@ -387,11 +413,12 @@ class Ventana_inicial:
             "DNI": self.ent_dni.get().strip() or "No especificado",
             "Sexo": self.cbx_sexo.get() if self.cbx_sexo.get() != "Seleccionar Sexo" else "No especificado",
             "Fecha Nacimiento": self.ent_fecha.get().strip() or "No especificada",
-            "Notas": self.txt_notas.get("1.0", tk.END).strip() or "Ninguna",
+            "Enfermedades": self.txt_enferm.get("1.0", tk.END).strip() or "Ninguna",
+            "Tratamientos": self.txt_tto.get("1.0", tk.END).strip() or "Ninguno",
             "Genes": genes
         }
 
         ruta = filedialog.asksaveasfilename(defaultextension=".pdf", initialfile=f"Informe_{nombre}_{apellido}.pdf")
         if ruta:
-            generar_pdf_manual(datos, ruta)
-            messagebox.showinfo("Éxito", "PDF del paciente manual generado correctamente.")
+            informe_pdf(id_paciente, datos, df_res, df_paciente, ruta)
+            messagebox.showinfo("Éxito", "Informe del paciente generado correctamente.")
