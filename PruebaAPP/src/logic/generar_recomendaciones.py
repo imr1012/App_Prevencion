@@ -21,9 +21,9 @@ def generar_recomendaciones(solucion):
             elif gen == "DPYD":
                 medicacion = "Fluoropirimidinas"
                 if fenotipo == "Poor Metabolizer":
-                    recomendacion = "Contraindicado. Iniciar con dosis muy reducidas"
+                    recomendacion = "Contraindicado. \nIniciar con dosis muy reducidas"
                 elif fenotipo == "Intermediate Metabolizer":
-                    recomendacion = "50% dosis estándar, aumentando si es tolerado"
+                    recomendacion = "50% dosis estándar, \naumentando si es tolerado"
                 else:
                     recomendacion = "Dosis estándar"
 

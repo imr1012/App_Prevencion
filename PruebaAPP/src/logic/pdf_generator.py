@@ -367,7 +367,8 @@ def informe_pdf(id, datos_personales, df_resultados, df_datos, ruta):
     colores = {
         "Poor Metabolizer": colors.HexColor("#f8a4a4"),
         "Intermediate Metabolizer": colors.HexColor("#f9ddb5"),
-        "Normal Metabolizer": colors.HexColor("#ddf4a2")
+        "Normal Metabolizer": colors.HexColor("#ddf4a2"),
+        "Ultrarrapid Metabolizer": colors.HexColor("#f8a4a4")
     }
 
 
