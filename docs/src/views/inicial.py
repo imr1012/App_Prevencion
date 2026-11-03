@@ -4,6 +4,8 @@ import customtkinter as ctk
 from src.logic.processor import procesar_genotipos
 from src.logic.pdf_generator import generar_pdf_paciente, generar_pdf_manual, informe_pdf
 from src.logic.generar_recomendaciones import generar_recomendaciones
+import os
+import traceback
 
 
 
@@ -418,7 +420,14 @@ class Ventana_inicial:
             "Genes": genes
         }
 
-        ruta = filedialog.asksaveasfilename(defaultextension=".pdf", initialfile=f"Informe_{nombre}_{apellido}.pdf")
+        ruta = filedialog.asksaveasfilename(
+                    defaultextension=".pdf",
+                    initialfile=f"Informe_{nombre}_{apellido}.pdf",
+                    initialdir=os.path.expanduser("~/Documents"),
+                    filetypes=[("PDF", "*.pdf")],
+                )
+         
         if ruta:
             informe_pdf(id_paciente, datos, df_res, df_paciente, ruta)
             messagebox.showinfo("Éxito", "Informe del paciente generado correctamente.")
+            

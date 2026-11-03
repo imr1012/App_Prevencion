@@ -105,9 +105,9 @@ def generar_pdf_manual(datos, ruta_guardado):
 
 def informe_pdf(id, datos_personales, df_resultados, df_datos, ruta):
     archivo_pdf = ruta
-    logo = "PruebaAPP/logo_DrugApp.jpeg"
+    logo = "docs/logo_DrugApp.jpeg"
 
-    df_resumen = pd.read_csv("PruebaAPP/mutaciones_entrez.csv")
+    df_resumen = pd.read_csv("docs/mutaciones_entrez.csv")
 
     doc = SimpleDocTemplate(
         archivo_pdf,
